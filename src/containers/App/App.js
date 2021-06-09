@@ -20,6 +20,9 @@ import AppNavbar from "./AppNavbar";
 import LoginHook from "../../hooks/LoginHook";
 import AdminPosts from "../Admin/AdminPosts";
 import AdminUsers from "../Admin/AdminUsers";
+import AdminTopics from "../Admin/AdminTopics";
+import AdminCreateTopic from "../Admin/AdminCreateTopic";
+import AdminEditTopic from "../Admin/AdminEditTopic";
 import EmailVerify from "../Auth/EmailVerify";
 import VerifyInstructions from "../Auth/VerifyInstructions";
 
@@ -129,6 +132,16 @@ function AdminRoutes() {
       <Route path={`${match.path}/users`}>
         <AdminUsers />
       </Route>
+      <Route path={`${match.path}/topics/create`}>
+        <AdminCreateTopic />
+      </Route>
+      <Route path={`${match.path}/topics/edit/:topicId`}>
+        <AdminEditTopic />
+      </Route>
+      <Route path={`${match.path}/topics`}>
+        <AdminTopics />
+      </Route>
+      
       <Route path={match.path}>g</Route>
     </Switch>
   );

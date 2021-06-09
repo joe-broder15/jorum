@@ -4,6 +4,7 @@ from app import app, api, mail
 from resources.Auth import UserResource, TokenResource, EmailVerify, ResetPasswordRequest, PasswordReset, GetUserCredentials, UserPermission
 from resources.Post import PostList, PostDetail, PostUser
 from resources.User import UserDetail, UserList
+from resources.Topic import TopicDetail, TopicList
 from resources.Uploads import UserAvatar
 from flask import render_template
 
@@ -25,6 +26,10 @@ api.add_resource(UserAvatar, '/api/upload/avatar/<username>')
 api.add_resource(PostList, '/api/post')
 api.add_resource(PostDetail,'/api/post/<post_id>')
 api.add_resource(PostUser,'/api/post/user/<username>')
+
+# topic routes
+api.add_resource(TopicList, '/api/topic')
+api.add_resource(TopicDetail, '/api/topic/<topic_id>')
 
 # serve frontend
 @app.route('/', defaults={'path': ''})

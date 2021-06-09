@@ -29,15 +29,6 @@ class UserProfile(Base):
     cover = Column(String(250), nullable=True)
     private = Column(Boolean(), nullable=false, default=0);
 
-# post model, main data object for this app
-class Post(Base):
-    __tablename__ = 'post'
-    id = Column(Integer, primary_key=True)
-    text = Column(String(20), default="post text", nullable=False)
-    title = Column(String(250), default="post title", nullable=False)
-    created_date = Column(DateTime, default=datetime.datetime.utcnow)        
-    user = Column(String(20), ForeignKey(User.username), nullable=False)  
-
 # token blacklist
 class BlackListToken(Base):
     __tablename__ = 'token_blacklist'
@@ -55,6 +46,26 @@ class ResetPassword(Base):
     challenge = Column(String(250), nullable=False, primary_key=True)
     username = Column(String(60), default="post text", nullable=False, unique=True)
     created_date = Column(DateTime, default=datetime.datetime.utcnow) 
+
+# post model, main data object for this app
+class Post(Base):
+    __tablename__ = 'post'
+    id = Column(Integer, primary_key=True)
+    text = Column(String(250), default="post text", nullable=False)
+    title = Column(String(50), default="post title", nullable=False)
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)        
+    user = Column(String(20), ForeignKey(User.username), nullable=False) 
+
+# topic / subforum object
+class Topic(Base):
+    __tablename__ = 'topics'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), default="topic name", nullable=False, unique=True)
+    description = Column(String(250), default="topic description", nullable=False)
+    threads = Column(Integer, default=0, nullable=False)
+    nsfw = Column(Boolean, nullable=False, default=False)
+    
+
 
 # create session maker
 uri = os.getenv("DATABASE_URL")

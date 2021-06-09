@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.1",
+    "concurrently": "^6.2.0",
     "react": "^17.0.1",
     "react-bootstrap-datetimepicker": "0.0.22",
     "react-dom": "^17.0.1",
@@ -14,7 +15,8 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start": "react-scripts build && python main.py",
+    "dev": "concurrently \"react-scripts start\" \"python main.py\"",
+    "deploy": "react-scripts build && python main.py",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

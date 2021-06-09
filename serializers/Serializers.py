@@ -36,6 +36,17 @@ class PostSchema(Schema):
         ordered = True
 
 # serializer for post creation
+class TopicSchema(Schema):
+    id = fields.Int(validate=must_not_be_negative)
+    name = fields.String(required=True, validate=must_not_be_blank)
+    description = fields.String(required=True, validate=must_not_be_blank)
+    threads = fields.Int(validate=must_not_be_negative)
+    nsfw = fields.Bool()
+
+    class Meta:
+        ordered = True
+
+# serializer for post creation
 class UserSchema(Schema):
     username = fields.String(validate=must_not_be_blank)
     email = fields.String(required=True, validate=validate_email)
