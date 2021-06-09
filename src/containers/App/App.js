@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 
 import PostList from "../Posts/PostList";
+import TopicList from "../Topics/TopicList";
 import PostCreate from "../Posts/PostCreate";
 import PostDetail from "../Posts/PostDetail";
 import PostEdit from "../Posts/PostEdit";
@@ -48,7 +49,7 @@ export default function App() {
         <div>
           <Switch>
             <Route exact path="/">
-              <PostList />
+              <TopicList />
             </Route>
             <Route path="/reset/:challenge">
               <ResetPassword />
