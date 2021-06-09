@@ -83,24 +83,22 @@ export default function AdminEditTopic(props) {
 
     // handles delete
     const handleDelete = () => {
-        console.log("h");
-    //   const deleteData = () => {
-    //     axiosInstance
-    //       .delete("/post/" + String(data.id))
-    //       .then((response) => {
-    //         // setIsLoaded(true);
-    //         if (response.status == 200) {
-    //           alert("success");
-    //         } else {
-    //           alert("fail");
-    //         }
-    //         history.push("/");
-    //       })
-    //       .catch((error) => {
-    //         alert(error);
-    //       });
-    //   };
-    //   deleteData();
+      const deleteData = () => {
+        axiosInstance
+          .delete("/topic/" + data.id)
+          .then((response) => {
+            if (response.status == 200) {
+              alert("success");
+            } else {
+              alert("fail");
+            }
+            history.push("/admin/topics");
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      };
+      deleteData();
     };
 
   // wait for load

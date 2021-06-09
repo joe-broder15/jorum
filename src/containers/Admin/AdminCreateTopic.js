@@ -32,7 +32,7 @@ export default function AdminCreateTopic() {
           } else {
             alert("fail");
           }
-          history.push("/");
+          history.push("/admin/topics");
         })
         .catch((error) => {
           alert(error);

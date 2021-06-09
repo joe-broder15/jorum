@@ -85,22 +85,22 @@ class TopicDetail(Resource):
             # return topic
             return topic_serializer.dump(topic), HTTPStatus.CREATED
     
-#     # delete a post
-#     @token_required
-#     def delete(self, post_id, user_token):
+    # delete a topic
+    @token_required
+    def delete(self, topic_id, user_token):
 
-#         # delete post
-#         with DBSession() as session:
-#             try:
-#                 post=session.query(Post).filter(Post.id == post_id).one()
-#             except:
-#                 return {"errors": "Post Not Found"}, HTTPStatus.NOT_FOUND
+        # delete post
+        with DBSession() as session:
+            try:
+                topic=session.query(Topic).filter(Topic.id == topic_id).one()
+            except:
+                return {"errors": "Post Not Found"}, HTTPStatus.NOT_FOUND
             
-#             # check if post belongs to the authenticated user or admin
-#             if post.user != user_token['username'] and user_token['privilege'] <= 1:
-#                 return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+            # check if admin
+            if user_token['privilege'] <= 1:
+                return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
 
-#             session.delete(post)
-#             session.commit()
-#             # return status
-#             return "success", HTTPStatus.OK
+            session.delete(topic)
+            session.commit()
+            # return status
+            return "success", HTTPStatus.OK
