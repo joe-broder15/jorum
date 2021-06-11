@@ -1,3 +1,4 @@
+from os import name
 from flask_restful import Resource
 from flask import request
 from marshmallow import ValidationError
@@ -13,32 +14,29 @@ thread_serializer = ThreadSchema();
 # get list of all threads or add a new post
 class ThreadList(Resource):
     # get list of all threads
-    def get(self, thread_topic):
+    def get(self, topic_id):
         with DBSession() as session:
-            threads=session.query(Thread).filter(Thread.topic == thread_topic).all()
+            threads=session.query(Thread).filter(Thread.topic == topic_id).all()
             return thread_serializer.dump(threads,many=True), HTTPStatus.OK
     
-    # # create new topic (admin only)
-    # @token_required
-    # def post(self, user_token):
-    #     # serialize request
-    #     with DBSession() as session:
+    # create new topic (admin only)
+    @token_required
+    def post(self, user_token, topic_id):
+        # serialize request
+        with DBSession() as session:
+
+            try:
+                data = request.get_json()
+                print(data)
+                thread = Thread(name = data['threadName'], nsfw = data['threadNsfw'], topic=topic_id, user=user_token['username'])
+                    
+            except:
+                return HTTPStatus.BAD_REQUEST
+            session.add(thread)
+            session.commit()
+            return HTTPStatus.CREATED
             
-    #         # check if user is an admin
-    #         if user_token['privilege'] <= 1:
-    #             return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
 
-    #         try:
-    #             data = topic_serializer.load(request.get_json())
-    #         except ValidationError as err:
-    #             return {"errors": err.messages}, HTTPStatus.BAD_REQUEST
-
-    #         # create new Post
-    #         topic = Topic(name=data['name'], description=data['description'], nsfw=data['nsfw'])
-    #         session.add(topic)
-    #         session.commit()
-    #         # return post to user
-    #         return topic_serializer.dump(topic), HTTPStatus.CREATED
 
 
 

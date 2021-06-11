@@ -46,6 +46,18 @@ class TopicSchema(Schema):
     class Meta:
         ordered = True
 
+# serializer for threads
+class ThreadSchema(Schema):
+    id = fields.Int(validate=must_not_be_negative)
+    name = fields.String(required=True, validate=must_not_be_blank)
+    nsfw = fields.Bool()
+    created_date = fields.DateTime(dump_only=True)
+    user = fields.String(dump_only=True)
+    topic = fields.Int(validate=must_not_be_negative)
+
+    class Meta:
+        ordered = True
+
 # serializer for post creation
 class UserSchema(Schema):
     username = fields.String(validate=must_not_be_blank)

@@ -10,6 +10,8 @@ import {
 
 import PostList from "../Posts/PostList";
 import TopicList from "../Topics/TopicList";
+import TopicDetail from "../Topics/TopicDetail";
+import ThreadCreate from "../Threads/ThreadCreate";
 import PostCreate from "../Posts/PostCreate";
 import PostDetail from "../Posts/PostDetail";
 import PostEdit from "../Posts/PostEdit";
@@ -51,6 +53,13 @@ export default function App() {
             <Route exact path="/">
               <TopicList />
             </Route>
+            <Route path="/topic/:topicId/thread/create">
+              <ThreadCreate />
+            </Route>
+            <Route path="/topic/:topicId">
+              <TopicDetail />
+            </Route>
+
             <Route path="/reset/:challenge">
               <ResetPassword />
             </Route>
@@ -142,7 +151,7 @@ function AdminRoutes() {
       <Route path={`${match.path}/topics`}>
         <AdminTopics />
       </Route>
-      
+
       <Route path={match.path}>g</Route>
     </Switch>
   );

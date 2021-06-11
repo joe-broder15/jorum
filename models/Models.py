@@ -47,14 +47,7 @@ class ResetPassword(Base):
     username = Column(String(60), default="post text", nullable=False, unique=True)
     created_date = Column(DateTime, default=datetime.datetime.utcnow) 
 
-# post model, main data object for this app
-class Post(Base):
-    __tablename__ = 'post'
-    id = Column(Integer, primary_key=True)
-    text = Column(String(250), default="post text", nullable=False)
-    title = Column(String(50), default="post title", nullable=False)
-    created_date = Column(DateTime, default=datetime.datetime.utcnow)        
-    user = Column(String(20), ForeignKey(User.username), nullable=False) 
+ 
 
 # topic / subforum object
 class Topic(Base):
@@ -64,7 +57,26 @@ class Topic(Base):
     description = Column(String(250), default="topic description", nullable=False)
     threads = Column(Integer, default=0, nullable=False)
     nsfw = Column(Boolean, nullable=False, default=False)
+
+# thread object
+class Thread(Base):
+    __tablename__ = 'threads'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), default="topic name", nullable=False, unique=True)
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)
+    nsfw = Column(Boolean, nullable=False, default=False)
+    user = Column(String(20), ForeignKey(User.username), nullable=False)
+    topic = Column(Integer, ForeignKey(Topic.id))
     
+# post object
+class Post(Base):
+    __tablename__ = 'post'
+    id = Column(Integer, primary_key=True)
+    text = Column(String(250), default="post text", nullable=False)
+    title = Column(String(50), default="post title", nullable=False)
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)        
+    user = Column(String(20), ForeignKey(User.username), nullable=False)
+    thread = Column(Integer, ForeignKey(Thread.id))
 
 
 # create session maker
