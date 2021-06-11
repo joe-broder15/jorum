@@ -48,12 +48,12 @@ class TopicSchema(Schema):
 
 # serializer for threads
 class ThreadSchema(Schema):
-    id = fields.Int(validate=must_not_be_negative)
+    id = fields.Int(validate=must_not_be_negative, dump_only=True)
     name = fields.String(required=True, validate=must_not_be_blank)
-    nsfw = fields.Bool()
+    nsfw = fields.Bool(dump_only=True)
     created_date = fields.DateTime(dump_only=True)
     user = fields.String(dump_only=True)
-    topic = fields.Int(validate=must_not_be_negative)
+    topic = fields.Int(validate=must_not_be_negative,dump_only=True)
 
     class Meta:
         ordered = True

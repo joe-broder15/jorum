@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GetApiRequest from "../../hooks/GetApiRequest";
-import Thread from "../../components/Threads/Thread";
+import Thread from "./Thread";
 import { Link, useParams } from "react-router-dom";
 import { Container, Row, Col, Spinner, Card, ListGroup } from "react-bootstrap";
 

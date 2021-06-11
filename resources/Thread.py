@@ -40,65 +40,63 @@ class ThreadList(Resource):
 
 
 
-# # get, modify or delete an individual post
-# class TopicDetail(Resource):
-#     # get an individual post
-#     def get(self, topic_id):
-#         # get post
-#         with DBSession() as session:
-#             try:
-#                 topic=session.query(Topic).filter(Topic.id == topic_id).one()
-#             except:
-#                 return {"errors": "Post Not Found"}, HTTPStatus.NOT_FOUND
+# get, modify or delete an individual thread
+class ThreadDetail(Resource):
+    # get an individual thread
+    def get(self, topic_id, thread_id):
+        # get thread
+        with DBSession() as session:
+            try:
+                thread=session.query(Thread).filter(Thread.topic== topic_id, Thread.id == thread_id).one()
+            except:
+                return {"errors": "Thread Not Found"}, HTTPStatus.NOT_FOUND
             
-#             # return serialized post
-#             return topic_serializer.dump(topic), HTTPStatus.OK
+            # return serialized post
+            return thread_serializer.dump(thread), HTTPStatus.OK
 
-#     # update an individual topic
-#     @token_required
-#     def put(self, topic_id, user_token):
-#         # get topic from db
-#         with DBSession() as session:
-#             try:
-#                 topic=session.query(Topic).filter(Topic.id == topic_id).one()
-#             except:
-#                 return {"errors": "Topic Not Found"}, HTTPStatus.NOT_FOUND
+    # update an individual thread
+    @token_required
+    def put(self, topic_id, user_token, thread_id):
+        # get topic from db
+        with DBSession() as session:
+            try:
+                thread=session.query(Thread).filter(Thread.topic== topic_id, Thread.id == thread_id).one()
+            except:
+                return {"errors": "Thread Not Found"}, HTTPStatus.NOT_FOUND
             
-#             # check if user is an admin
-#             if user_token['privilege'] <= 1:
-#                 return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+            # check if user is an admin or owns the thread
+            if user_token['privilege'] <= 1 and thread.user != user_token['username']:
+                return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
             
-#             # serialize inputs
-#             try:
-#                 data = topic_serializer.load(request.get_json())
-#             except ValidationError as err:
-#                 return {"errors": err.messages}, 422
+            # serialize inputs
+            try:
+                data = thread_serializer.load(request.get_json())
+            except ValidationError as err:
+                return {"errors": err.messages}, 422
 
-#             # modify topic
-#             topic.name = data['name']
-#             topic.description = data['description']
-#             topic.nsfw = data['nsfw']
-#             session.commit()
+            # modify topic
+            thread.name = data['name']
+            session.commit()
             
-#             # return topic
-#             return topic_serializer.dump(topic), HTTPStatus.CREATED
+            # return topic
+            return  HTTPStatus.CREATED
     
-#     # delete a topic
-#     @token_required
-#     def delete(self, topic_id, user_token):
+    # delete a thread
+    @token_required
+    def delete(self, topic_id, user_token, thread_id):
 
-#         # delete post
-#         with DBSession() as session:
-#             try:
-#                 topic=session.query(Topic).filter(Topic.id == topic_id).one()
-#             except:
-#                 return {"errors": "Post Not Found"}, HTTPStatus.NOT_FOUND
+        # delete post
+        with DBSession() as session:
+            try:
+                thread=session.query(Thread).filter(Thread.topic== topic_id, Thread.id == thread_id).one()
+            except:
+                return {"errors": "Thread Not Found"}, HTTPStatus.NOT_FOUND
             
-#             # check if admin
-#             if user_token['privilege'] <= 1:
-#                 return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+            # check if user is an admin or owns the thread
+            if user_token['privilege'] <= 1 and thread.user != user_token['username']:
+                return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
 
-#             session.delete(topic)
-#             session.commit()
-#             # return status
-#             return "success", HTTPStatus.OK
+            session.delete(thread)
+            session.commit()
+            # return status
+            return "success", HTTPStatus.OK
