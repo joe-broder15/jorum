@@ -56,6 +56,9 @@ export default function AppNavbar() {
                   <NavDropdown.Item>
                     <Link to="/admin/topics">Topics</Link>
                   </NavDropdown.Item>
+                  <NavDropdown.Item>
+                    <Link to="/admin/threads">Threads</Link>
+                  </NavDropdown.Item>
                 </Fragment>
               ) : (
                 ""

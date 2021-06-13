@@ -6,7 +6,7 @@ from resources.Post import PostList, PostDetail, PostUser
 from resources.User import UserDetail, UserList
 from resources.Topic import TopicDetail, TopicList
 from resources.Uploads import UserAvatar
-from resources.Thread import ThreadDetail, ThreadList
+from resources.Thread import ThreadDetail, ThreadList, AllThreadList
 from flask import render_template
 
 import os
@@ -35,6 +35,7 @@ api.add_resource(TopicDetail, '/api/topic/<topic_id>')
 #thread routes
 api.add_resource(ThreadDetail, '/api/topic/<topic_id>/thread/<thread_id>')
 api.add_resource(ThreadList, '/api/topic/<topic_id>/thread')
+api.add_resource(AllThreadList, '/api/thread')
 
 
 

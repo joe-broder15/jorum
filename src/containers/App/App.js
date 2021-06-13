@@ -12,7 +12,7 @@ import PostList from "../Posts/PostList";
 import TopicList from "../Topics/TopicList";
 import TopicDetail from "../Topics/TopicDetail";
 import ThreadCreate from "../Threads/ThreadCreate";
-import ThreadEdit from "../Threads/ThreadEdit"
+import ThreadEdit from "../Threads/ThreadEdit";
 import PostCreate from "../Posts/PostCreate";
 import PostDetail from "../Posts/PostDetail";
 import PostEdit from "../Posts/PostEdit";
@@ -27,6 +27,7 @@ import AdminUsers from "../Admin/AdminUsers";
 import AdminTopics from "../Admin/AdminTopics";
 import AdminCreateTopic from "../Admin/AdminCreateTopic";
 import AdminEditTopic from "../Admin/AdminEditTopic";
+import AdminThreads from "../Admin/AdminThreads";
 import EmailVerify from "../Auth/EmailVerify";
 import VerifyInstructions from "../Auth/VerifyInstructions";
 
@@ -154,6 +155,9 @@ function AdminRoutes() {
       </Route>
       <Route path={`${match.path}/topics`}>
         <AdminTopics />
+      </Route>
+      <Route path={`${match.path}/threads`}>
+        <AdminThreads />
       </Route>
 
       <Route path={match.path}>g</Route>

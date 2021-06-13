@@ -35,7 +35,12 @@ class ThreadList(Resource):
             session.add(thread)
             session.commit()
             return HTTPStatus.CREATED
-            
+        
+class AllThreadList(Resource):
+    def get(self):
+        with DBSession() as session:
+            threads=session.query(Thread).all()
+            return thread_serializer.dump(threads,many=True), HTTPStatus.OK
 
 
 
@@ -57,7 +62,7 @@ class ThreadDetail(Resource):
     # update an individual thread
     @token_required
     def put(self, topic_id, user_token, thread_id):
-        # get topic from db
+        # get thread from db
         with DBSession() as session:
             try:
                 thread=session.query(Thread).filter(Thread.topic== topic_id, Thread.id == thread_id).one()
@@ -85,7 +90,7 @@ class ThreadDetail(Resource):
     @token_required
     def delete(self, topic_id, user_token, thread_id):
 
-        # delete post
+        # delete thread
         with DBSession() as session:
             try:
                 thread=session.query(Thread).filter(Thread.topic== topic_id, Thread.id == thread_id).one()
