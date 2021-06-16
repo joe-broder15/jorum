@@ -1,28 +1,43 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosApi";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
+import { Editor } from "react-draft-wysiwyg";
+import {
+  EditorState,
+  ContentState,
+  convertFromHTML,
+  CompositeDecorator,
+  convertToRaw,
+  convertFromRaw,
+  getDefaultKeyBinding,
+} from "draft-js";
 import { Container, Row, Card, Col, Form, Button } from "react-bootstrap";
+import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-export default function PostCreate() {
+export default function PostCreate(props) {
+  let { topicId, threadId } = useParams();
   let history = useHistory();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+
+  //   confirm
   const [confirm, setConfirm] = useState(false);
   const { authState, setAuthState, userState, setUserState } =
     React.useContext(AuthContext);
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    if (title == "" || description == "" || confirm == false) {
+    if (confirm == false) {
       alert("please do not leave any fields blank");
       return;
     }
 
     const fetchData = () => {
       axiosInstance
-        .post("/post", {
-          title: title,
-          text: description,
+        .post("/topic/" + topicId + "/thread/" + threadId + "/post", {
+          content: convertToRaw(editorState.getCurrentContent()),
         })
         .then((response) => {
           if (response.status == 201) {
@@ -30,7 +45,7 @@ export default function PostCreate() {
           } else {
             alert("fail");
           }
-          history.push("/");
+          history.push("/topic/"+topicId+"/thread/"+threadId);
         })
         .catch((error) => {
           alert(error);
@@ -46,34 +61,33 @@ export default function PostCreate() {
     }
   });
 
+  useEffect(() => {
+    console.log(convertToRaw(editorState.getCurrentContent()));
+  }, [editorState]);
+
   return (
     <Container>
       <Row>
         <Col>
           <Row className="justify-content-md-center">
             <Col md="8">
-              <h1>Create Post</h1>
               <Card>
+                <Card.Header>
+                  <Card.Title>Create a Post</Card.Title>
+                </Card.Header>
                 <Card.Body>
                   <Form onSubmit={(event) => handleSubmit(event)}>
-                    <Form.Group>
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control
-                        value={title}
-                        onChange={(event) => setTitle(event.target.value)}
+                    <div
+                      style={{
+                        padding: "2px",
+                        minHeight: "400px",
+                      }}
+                    >
+                      <Editor
+                        editorState={editorState}
+                        onEditorStateChange={setEditorState}
                       />
-                    </Form.Group>
-                    <br />
-                    <Form.Group>
-                      <Form.Label>Description</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows="9"
-                        value={description}
-                        onChange={(event) => setDescription(event.target.value)}
-                      />
-                    </Form.Group>
-                    <br />
+                    </div>
                     <Form.Check
                       type="checkbox"
                       value={confirm}

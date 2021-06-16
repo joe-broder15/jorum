@@ -27,10 +27,12 @@ def validate_email(data):
 # serializer for post creation
 class PostSchema(Schema):
     id = fields.Int(validate=must_not_be_negative)
-    title = fields.String(required=True, validate=must_not_be_blank)
-    text = fields.String(required=True, validate=must_not_be_blank)
+    content = fields.String(required=True, validate=must_not_be_blank)
     created_date = fields.DateTime(dump_only=True)
     user = fields.String(dump_only=True)
+    thread = fields.Int(dump_only = True)
+    first = fields.Bool(dump_only=True)
+    reply = fields.Int(dump_only=True)
 
     class Meta:
         ordered = True

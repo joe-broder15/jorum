@@ -2,7 +2,17 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosApi";
 import { useHistory, useParams } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
+import { Editor } from "react-draft-wysiwyg";
+import { 
+  EditorState,
+  ContentState,
+  convertFromHTML,
+  CompositeDecorator,
+  convertToRaw,
+  convertFromRaw,
+  getDefaultKeyBinding, } from "draft-js";
 import { Container, Row, Card, Col, Form, Button } from "react-bootstrap";
+import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 export default function ThreadCreate(props) {
   let { topicId } = useParams();
@@ -14,6 +24,9 @@ export default function ThreadCreate(props) {
 
   //   original post
   const [postContent, setPostContent] = useState("");
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
 
   //   confirm
   const [confirm, setConfirm] = useState(false);
@@ -21,7 +34,7 @@ export default function ThreadCreate(props) {
     React.useContext(AuthContext);
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    if (threadName == "" || postContent == "" || confirm == false) {
+    if (threadName == "" || postContent == {} || confirm == false) {
       alert("please do not leave any fields blank");
       return;
     }
@@ -29,9 +42,9 @@ export default function ThreadCreate(props) {
     const fetchData = () => {
       axiosInstance
         .post("/topic/" + topicId + "/thread", {
-          postContent: postContent,
-          threadName:threadName,
-          threadNsfw: threadNsfw
+          postContent: convertToRaw(editorState.getCurrentContent()),
+          threadName: threadName,
+          threadNsfw: threadNsfw,
         })
         .then((response) => {
           if (response.status == 200) {
@@ -54,6 +67,10 @@ export default function ThreadCreate(props) {
       history.push("/");
     }
   });
+
+  useEffect(() => {
+    console.log(convertToRaw(editorState.getCurrentContent()));
+  }, [editorState]);
 
   return (
     <Container>
@@ -87,14 +104,21 @@ export default function ThreadCreate(props) {
                     <h3>First Post</h3>
                     <Form.Group>
                       <Form.Label>Content</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows="9"
-                        value={postContent}
-                        onChange={(event) => setPostContent(event.target.value)}
-                      />
+                      <div
+                        style={{
+                          padding: "2px",
+                          minHeight: "400px",
+                        }}
+                      >
+                        <Editor
+                          editorState={editorState}
+                          onEditorStateChange={setEditorState}
+                        />
+                      </div>
+                      
                     </Form.Group>
                     <br />
+
                     <Form.Check
                       type="checkbox"
                       value={confirm}

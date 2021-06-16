@@ -7,15 +7,17 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.1",
     "concurrently": "^6.2.0",
+    "draft-js": "^0.11.7",
     "react": "^17.0.1",
     "react-bootstrap-datetimepicker": "0.0.22",
     "react-dom": "^17.0.1",
+    "react-draft-wysiwyg": "^1.14.7",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start":"react-scripts start",
+    "start": "react-scripts start",
     "dev": "concurrently \"react-scripts start\" \"python main.py\"",
     "deploy": "react-scripts build && python main.py",
     "build": "react-scripts build",

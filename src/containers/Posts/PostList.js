@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import GetApiRequest from "../../hooks/GetApiRequest";
-import Post from "../../components/Posts/Post";
+import Post from "./Post";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
+import { useParams, Link } from "react-router-dom";
 
 export default function PostList() {
   // get posts using our GET api hook
-  const { data, error, isLoaded } = GetApiRequest("/post");
+  let { topicId, threadId } = useParams();
+  const { data, error, isLoaded } = GetApiRequest(
+    "/topic/" + topicId + "/thread/" + threadId + "/post"
+  );
 
   // check errors
   if (error !== null) {
@@ -22,20 +26,15 @@ export default function PostList() {
   // render a Post for each item
   return (
     <Container>
-      <Row>
+      <Row className="justify-content-md-center">
         <Col>
-          <Row className="justify-content-md-center">
-            <Col md="8">
-              <h1>Posts</h1>
-              {data.map((item) => (
-                <Row className="justify-content-center">
-                  <Col>
-                    <Post data={item} />
-                  </Col>
-                </Row>
-              ))}
-            </Col>
-          </Row>
+          {data.map((item) => (
+            <Row className="justify-content-center">
+              <Col>
+                <Post data={item} />
+              </Col>
+            </Row>
+          ))}
         </Col>
       </Row>
     </Container>

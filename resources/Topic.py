@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import request
 from marshmallow import ValidationError
 from sqlalchemy.sql.functions import user
-from models.Models import Topic, DBSession
+from models.Models import Post, Thread, Topic, DBSession
 from serializers.Serializers import TopicSchema
 from http import HTTPStatus
 from .Auth import token_required
@@ -89,17 +89,24 @@ class TopicDetail(Resource):
     @token_required
     def delete(self, topic_id, user_token):
 
-        # delete post
+        # delete topic
         with DBSession() as session:
             try:
                 topic=session.query(Topic).filter(Topic.id == topic_id).one()
+                threads = session.query(Thread).filter(Thread.topic == topic_id).all()
             except:
                 return {"errors": "Post Not Found"}, HTTPStatus.NOT_FOUND
             
             # check if admin
             if user_token['privilege'] <= 1:
                 return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
-
+            
+            # delete threads
+            for thread in threads:
+                posts = session.query(Post).filter(Post.thread == thread.id).all()
+                for post in posts:
+                    session.delete(post)
+                session.delete(thread)
             session.delete(topic)
             session.commit()
             # return status

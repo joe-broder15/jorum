@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, create_engine,Column, Integer, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql.expression import false, true
+from sqlalchemy.sql.expression import column, false, true
 import datetime
 import os
 
@@ -72,11 +72,12 @@ class Thread(Base):
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
-    text = Column(String(250), default="post text", nullable=False)
-    title = Column(String(50), default="post title", nullable=False)
+    content = Column(String(1000), default="", nullable=False)
     created_date = Column(DateTime, default=datetime.datetime.utcnow)        
     user = Column(String(20), ForeignKey(User.username), nullable=False)
     thread = Column(Integer, ForeignKey(Thread.id))
+    first = Column(Boolean, nullable=False, default=False)
+    reply = Column(Integer, nullable=False, default=0)
 
 
 # create session maker

@@ -24,14 +24,6 @@ export default function AppNavbar() {
           <Nav.Link>
             <Link to="/">Home</Link>
           </Nav.Link>
-          {/* check if user is logged in, if so allow them to create a new post */}
-          {authState && userState != null ? (
-            <Nav.Link>
-              <Link to="/create">Create</Link>
-            </Nav.Link>
-          ) : (
-            ""
-          )}
         </Nav>
         <Nav>
           {/* login controls */}

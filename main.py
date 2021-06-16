@@ -23,10 +23,7 @@ api.add_resource(UserList, '/api/user')
 api.add_resource(UserDetail, '/api/user/<username>')
 api.add_resource(UserAvatar, '/api/upload/avatar/<username>')
 
-# post routes (modify)
-api.add_resource(PostList, '/api/post')
-api.add_resource(PostDetail,'/api/post/<post_id>')
-api.add_resource(PostUser,'/api/post/user/<username>')
+
 
 # topic routes
 api.add_resource(TopicList, '/api/topic')
@@ -36,6 +33,11 @@ api.add_resource(TopicDetail, '/api/topic/<topic_id>')
 api.add_resource(ThreadDetail, '/api/topic/<topic_id>/thread/<thread_id>')
 api.add_resource(ThreadList, '/api/topic/<topic_id>/thread')
 api.add_resource(AllThreadList, '/api/thread')
+
+# post routes (modify)
+api.add_resource(PostList, '/api/topic/<topic_id>/thread/<thread_id>/post')
+api.add_resource(PostDetail,'/api/topic/<topic_id>/thread/<thread_id>/post/<post_id>')
+# api.add_resource(PostUser,'/api/post/user/<username>')
 
 
 

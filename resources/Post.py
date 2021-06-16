@@ -6,6 +6,7 @@ from models.Models import Post, DBSession
 from serializers.Serializers import PostSchema
 from http import HTTPStatus
 from .Auth import token_required
+import json
 
 # serializer for post class
 post_serializer = PostSchema();
@@ -13,25 +14,26 @@ post_serializer = PostSchema();
 # get list of all posts or add a new post
 class PostList(Resource):
     # get list of posts
-    def get(self):
+    def get(self, topic_id, thread_id):
         with DBSession() as session:
-            posts=session.query(Post).all()
+            posts=session.query(Post).filter(Post.thread == thread_id).all()
             return post_serializer.dump(posts,many=True), HTTPStatus.OK
     
     # create new post
     @token_required
-    def post(self, user_token):
+    def post(self, user_token, topic_id, thread_id):
         # serialize request
         with DBSession() as session:
             try:
-                data = post_serializer.load(request.get_json())
+                data = request.get_json()['content']
             except ValidationError as err:
                 return {"errors": err.messages}, HTTPStatus.BAD_REQUEST
-
+            
             # create new Post
-            post = Post(text=data['text'], title=data['title'], user=user_token['username'])
+            post = Post(content=json.dumps(data), user=user_token['username'], thread=thread_id)
             session.add(post)
             session.commit()
+            
             # return post to user
             return post_serializer.dump(post), HTTPStatus.CREATED
 
@@ -51,7 +53,7 @@ class PostUser(Resource):
 # get, modify or delete an individual post
 class PostDetail(Resource):
     # get an individual post
-    def get(self, post_id):
+    def get(self, topic_id, thread_id, post_id):
         # get post
         with DBSession() as session:
             try:
@@ -64,7 +66,7 @@ class PostDetail(Resource):
 
     # update an individual post
     @token_required
-    def put(self, post_id, user_token):
+    def put(self, topic_id, thread_id, post_id, user_token):
         # get post from db
         with DBSession() as session:
             try:
@@ -78,20 +80,19 @@ class PostDetail(Resource):
             
             # serialize inputs
             try:
-                data = post_serializer.load(request.get_json())
+                data = request.get_json()['content']
             except ValidationError as err:
                 return {"errors": err.messages}, 422
 
             # modify post
-            post.title = data['title']
-            post.text = data['text']
+            post.content = json.dumps(data)
             session.commit()
             # return post
             return post_serializer.dump(post), HTTPStatus.CREATED
     
     # delete a post
     @token_required
-    def delete(self, post_id, user_token):
+    def delete(self, topic_id, thread_id, post_id, user_token):
 
         # delete post
         with DBSession() as session:

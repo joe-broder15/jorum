@@ -2,11 +2,13 @@ from os import name
 from flask_restful import Resource
 from flask import request
 from marshmallow import ValidationError
+from sqlalchemy.sql.expression import true
 from sqlalchemy.sql.functions import user
-from models.Models import Thread, DBSession
+from models.Models import Thread, DBSession, Post
 from serializers.Serializers import ThreadSchema
 from http import HTTPStatus
 from .Auth import token_required
+import json
 
 # serializer for post class
 thread_serializer = ThreadSchema();
@@ -29,10 +31,14 @@ class ThreadList(Resource):
                 data = request.get_json()
                 print(data)
                 thread = Thread(name = data['threadName'], nsfw = data['threadNsfw'], topic=topic_id, user=user_token['username'])
-                    
+                
+
             except:
                 return HTTPStatus.BAD_REQUEST
             session.add(thread)
+            session.commit()
+            post = Post(content=json.dumps(data['postContent']), user=user_token['username'], thread=thread.id, first=True, reply=0)
+            session.add(post)
             session.commit()
             return HTTPStatus.CREATED
         
@@ -94,13 +100,15 @@ class ThreadDetail(Resource):
         with DBSession() as session:
             try:
                 thread=session.query(Thread).filter(Thread.topic== topic_id, Thread.id == thread_id).one()
+                posts = session.query(Post).filter(Post.thread==thread_id).all()
             except:
                 return {"errors": "Thread Not Found"}, HTTPStatus.NOT_FOUND
             
             # check if user is an admin or owns the thread
             if user_token['privilege'] <= 1 and thread.user != user_token['username']:
                 return {"errors": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
-
+            for post in posts:
+                session.delete(post)
             session.delete(thread)
             session.commit()
             # return status

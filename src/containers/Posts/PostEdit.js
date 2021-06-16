@@ -14,55 +14,50 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
-export default function PostEdit(props) {
-  let { postId } = useParams();
+import { Editor } from "react-draft-wysiwyg";
+import {
+  EditorState,
+  ContentState,
+  convertFromHTML,
+  CompositeDecorator,
+  convertToRaw,
+  convertFromRaw,
+  getDefaultKeyBinding,
+} from "draft-js";
+import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
+function PostEditContainer(props) {
+  let { topicId, threadId, postId } = useParams();
   let history = useHistory();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [confirm, setConfirm] = useState(false);
   const { authState, setAuthState, userState } = React.useContext(AuthContext);
-  const { data, error, isLoaded } = GetApiRequest("/post/" + String(postId));
-  const isMounted = useRef(1);
 
-  // component did mount
-  useEffect(() => {
-    isMounted.current = 1;
-    if (!authState || userState == null) {
-      history.push("/");
-    }
-    return () => {
-      isMounted.current = 0;
-    };
-  });
-
-  const refreshState = () => {
-    if (isLoaded && isMounted) {
-      if (data.user != userState.username && userState.privilege <= 1) {
-        history.push("/");
-      }
-      setTitle(data.title);
-      setDescription(data.text);
-    }
-  };
+  const [contentState, setContentState] = useState(() =>
+    JSON.parse(props.data.content)
+  );
 
   // set initial state when data loads
   useEffect(() => {
-    refreshState();
-  }, [isLoaded]);
+    if (
+      userState == null ||
+      (props.data.user != userState.username && userState.privilege <= 1)
+    ) {
+      history.push("/");
+    }
+  }, []);
 
   // handles edit
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    if (title == "" || description == "" || confirm == false) {
+    if (confirm == false) {
       alert("please do not leave any fields blank");
       return;
     }
 
     const editData = () => {
       axiosInstance
-        .put("/post/" + String(data.id), {
-          title: title,
-          text: description,
+        .put("/topic/" + topicId + "/thread/" + threadId + "/post/" + postId, {
+          content: contentState,
         })
         .then((response) => {
           // setIsLoaded(true);
@@ -71,7 +66,7 @@ export default function PostEdit(props) {
           } else {
             alert("fail");
           }
-          history.push("/post/" + data.id);
+          history.push("/topic/" + topicId + "/thread/" + threadId);
         })
         .catch((error) => {
           alert(error);
@@ -84,7 +79,7 @@ export default function PostEdit(props) {
   const handleDelete = () => {
     const deleteData = () => {
       axiosInstance
-        .delete("/post/" + String(data.id))
+        .delete("/topic/" + topicId + "/thread/" + threadId + "/post/" + postId)
         .then((response) => {
           // setIsLoaded(true);
           if (response.status == 200) {
@@ -92,7 +87,7 @@ export default function PostEdit(props) {
           } else {
             alert("fail");
           }
-          history.push("/");
+          history.push("/topic/" + topicId + "/thread/" + threadId);
         })
         .catch((error) => {
           alert(error);
@@ -101,42 +96,21 @@ export default function PostEdit(props) {
     deleteData();
   };
 
-  // wait for load
-  if (!isLoaded) {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only"></span>
-      </Spinner>
-    );
-  }
   return (
     <Container>
+      {console.log(contentState)}
       <Row>
         <Col>
           <Row className="justify-content-md-center">
             <Col md="8">
-              <h1>Edit Post {data.id}</h1>
+              <h1>Edit Post</h1>
               <Card>
                 <Card.Body>
                   <Form onSubmit={(event) => handleSubmit(event)}>
-                    <Form.Group>
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control
-                        value={title}
-                        onChange={(event) => setTitle(event.target.value)}
-                      />
-                    </Form.Group>
-                    <br />
-                    <Form.Group>
-                      <Form.Label>Description</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows="9"
-                        value={description}
-                        onChange={(event) => setDescription(event.target.value)}
-                      />
-                    </Form.Group>
-                    <br />
+                    <Editor
+                      initialContentState={contentState}
+                      onContentStateChange={setContentState}
+                    />
                     <Form.Check
                       type="checkbox"
                       value={confirm}
@@ -147,9 +121,6 @@ export default function PostEdit(props) {
                     <br />
                     <Button type="submit">Submit</Button>
                   </Form>
-                  <Button variant="warning" onClick={refreshState}>
-                    Reset
-                  </Button>
                   <Button variant="danger" onClick={handleDelete}>
                     Delete
                   </Button>
@@ -161,4 +132,20 @@ export default function PostEdit(props) {
       </Row>
     </Container>
   );
+}
+
+// fetch data and render and editor
+export default function PostEdit(props) {
+  let { topicId, threadId, postId } = useParams();
+  const { data, error, isLoaded } = GetApiRequest(
+    "/topic/" + topicId + "/thread/" + threadId + "/post/" + postId
+  );
+  if (!isLoaded) {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only"></span>
+      </Spinner>
+    );
+  }
+  return <PostEditContainer data={data} />;
 }

@@ -13,6 +13,7 @@ import TopicList from "../Topics/TopicList";
 import TopicDetail from "../Topics/TopicDetail";
 import ThreadCreate from "../Threads/ThreadCreate";
 import ThreadEdit from "../Threads/ThreadEdit";
+import ThreadDetail from "../Threads/ThreadDetail";
 import PostCreate from "../Posts/PostCreate";
 import PostDetail from "../Posts/PostDetail";
 import PostEdit from "../Posts/PostEdit";
@@ -55,12 +56,22 @@ export default function App() {
             <Route exact path="/">
               <TopicList />
             </Route>
+            <Route path="/topic/:topicId/thread/:threadId/post/:postId/edit">
+              <PostEdit />
+            </Route>
+            <Route path="/topic/:topicId/thread/:threadId/post/create">
+              <PostCreate />
+            </Route>
             <Route path="/topic/:topicId/thread/:threadId/edit">
               <ThreadEdit />
             </Route>
             <Route path="/topic/:topicId/thread/create">
               <ThreadCreate />
             </Route>
+            <Route path="/topic/:topicId/thread/:threadId">
+              <ThreadDetail />
+            </Route>
+            
             <Route path="/topic/:topicId">
               <TopicDetail />
             </Route>
