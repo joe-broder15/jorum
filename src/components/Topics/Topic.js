@@ -1,22 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, Badge } from "react-bootstrap";
+import { Card, Badge, ListGroup, ListGroupItem } from "react-bootstrap";
 import UserLink from "../Users/UserLink";
 import { data } from "jquery";
 
 export default function Topic(props) {
   return (
-    <Card>
-      <Link to={"/topic/" + props.data.id}>
-        <Card.Body>
-          <Card.Title>
-            {props.data.name} {props.data.nsfw ? "(NSFW)" : ""}
-          </Card.Title>
-          <Card.Text>
-            <i>{props.data.description}</i>
-          </Card.Text>
-        </Card.Body>
+    <ListGroup.Item>
+      <Link to={"/topic/" + props.data.id} style={{ textDecoration: "none" }}>
+        <h4 >
+          {props.data.name} {props.data.nsfw ? (<i>{"(NSFW)"}</i>) : ""}
+        </h4>
+        <h6 style={{color:"gray"}}>
+          <i>{props.data.description}</i>
+        </h6>
       </Link>
-    </Card>
+    </ListGroup.Item>
   );
 }

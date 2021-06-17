@@ -23,7 +23,6 @@ import UserDetail from "../Users/UserDetail";
 import UserEdit from "../Users/UserEdit";
 import AppNavbar from "./AppNavbar";
 import LoginHook from "../../hooks/LoginHook";
-import AdminPosts from "../Admin/AdminPosts";
 import AdminUsers from "../Admin/AdminUsers";
 import AdminTopics from "../Admin/AdminTopics";
 import AdminCreateTopic from "../Admin/AdminCreateTopic";
@@ -152,9 +151,6 @@ function AdminRoutes() {
   let match = useRouteMatch();
   return (
     <Switch>
-      <Route path={`${match.path}/posts`}>
-        <AdminPosts />
-      </Route>
       <Route path={`${match.path}/users`}>
         <AdminUsers />
       </Route>

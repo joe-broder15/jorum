@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import GetApiRequest from "../../hooks/GetApiRequest";
 import Topic from "../../components/Topics/Topic";
 import ThreadList from "../Threads/ThreadList";
-import { Container, Row, Col, Spinner, Button } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Button, Card } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
 import PostList from "../Posts/PostList";
@@ -34,20 +34,36 @@ export default function ThreadDetail(props) {
       <Row>
         <Col>
           <Row className="justify-content-md-center">
-            <Col md="8">
-              <h1>{data.name}</h1>
-              {authState && userState != null ? (
-                <Link
-                  to={
-                    "/topic/" + topicId + "/thread/" + threadId + "/post/create"
-                  }
-                >
-                  <Button>Make a Post</Button>
-                </Link>
-              ) : (
-                ""
-              )}
-              <PostList />
+            <Col md="10">
+              <Card>
+                <Card.Header>
+                  <Card.Title>
+                    <Row>
+                      <Col className="mr-auto">{data.name}</Col>
+                      <Col sm="auto">
+                        {userState!=null && authState ? (
+                          <Link
+                            to={
+                              "/topic/" +
+                              topicId +
+                              "/thread/" +
+                              threadId +
+                              "/post/create"
+                            }
+                          >
+                            <Button>Make a Post</Button>
+                          </Link>
+                        ) : (
+                          ""
+                        )}
+                      </Col>
+                    </Row>
+                  </Card.Title>
+                </Card.Header>
+                <Card.Body>
+                  <PostList />
+                </Card.Body>
+              </Card>
             </Col>
           </Row>
         </Col>

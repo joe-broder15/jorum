@@ -52,7 +52,7 @@ export default function ThreadCreate(props) {
           } else {
             alert("fail");
           }
-          history.push("/");
+          history.push("/topic/"+topicId);
         })
         .catch((error) => {
           alert(error);

@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, Badge, Row, Col, Button } from "react-bootstrap";
+import {
+  Card,
+  Badge,
+  Row,
+  Col,
+  Button,
+  ListGroup,
+  ListGroupItem,
+} from "react-bootstrap";
 import UserLink from "../../components/Users/UserLink";
 import { data } from "jquery";
 import AuthContext from "../../contexts/AuthContext";
@@ -8,46 +16,51 @@ import AuthContext from "../../contexts/AuthContext";
 export default function Thread(props) {
   const { authState, setAuthState, userState } = React.useContext(AuthContext);
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>
-          <Row>
-            <Col md="9">
-              <Link
-                to={"/topic/" + props.data.topic + "/thread/" + props.data.id}
-              >
-                {props.data.id + ": "} {props.data.name}{" "}
-                {props.data.nsfw ? "(NSFW)" : ""}
-              </Link>
-            </Col>
-            <Col sm="3">
-              By: <UserLink user={props.data.user} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <i>{props.data.created_date}</i>
-            </Col>
-          </Row>
-          {authState == true &&
-          userState != null &&
-          userState.username == props.data.user ? (
+    <ListGroup.Item>
+      <Card.Title>
+        <Row >
+          <Col className="mr-auto">
             <Link
-              to={
-                "/topic/" +
-                props.data.topic +
-                "/thread/" +
-                props.data.id +
-                "/edit"
-              }
+              to={"/topic/" + props.data.topic + "/thread/" + props.data.id}
+              style={{ textDecoration: "none" }}
             >
-              <Button>Edit</Button>
+              <h3>
+                {props.data.name} {props.data.nsfw ? "(NSFW)" : ""}
+              </h3>
             </Link>
-          ) : (
-            ""
-          )}
-        </Card.Title>
-      </Card.Body>
-    </Card>
+          </Col>
+          <Col md={"auto"}>
+            <Row>
+              <i>
+                Created by <UserLink user={props.data.user} />
+              </i>
+            </Row>
+            <Row>
+              <i>Created on {props.data.created_date.slice(0,10)}</i>
+            </Row>
+          </Col>
+          <Col md={1}>
+            {" "}
+            {authState == true &&
+            userState != null &&
+            (userState.username == props.data.user || userState.privilege > 1)? (
+              <Link
+                to={
+                  "/topic/" +
+                  props.data.topic +
+                  "/thread/" +
+                  props.data.id +
+                  "/edit"
+                }
+              >
+                <Button>Edit</Button>
+              </Link>
+            ) : (
+              ""
+            )}
+          </Col>
+        </Row>
+      </Card.Title>
+    </ListGroup.Item>
   );
 }

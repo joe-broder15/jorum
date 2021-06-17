@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import GetApiRequest from "../../hooks/GetApiRequest";
 import AuthContext from "../../contexts/AuthContext";
 import { Link, useParams } from "react-router-dom";
-import UserPosts from "./UserPosts";
 import {
   Container,
   Row,
@@ -127,11 +126,7 @@ export default function UserDetail(props) {
           </Card>
           <br />
 
-          {data.private ? (
-            <h1>This account's posts are private</h1>
-          ) : (
-            <UserPosts user={data.username} />
-          )}
+          
         </Col>
       </Row>
     </Container>

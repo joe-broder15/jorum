@@ -27,6 +27,40 @@ export default function Post(props) {
 
   return (
     <Card>
+      <Card.Header>
+        <Card.Title>
+          <Row>
+            <Col className="mr-auto">
+              <i>
+                Post by <UserLink user={props.data.user} /> @{" "}
+                {props.data.created_date.slice(0, 10)}
+              </i>
+            </Col>
+            <Col sm="auto">
+              {userState != null &&
+              authState &&
+              (userState.username == props.data.user ||
+                userState.privilege > 1) ? (
+                <Link
+                  to={
+                    "/topic/" +
+                    topicId +
+                    "/thread/" +
+                    threadId +
+                    "/post/" +
+                    props.data.id +
+                    "/edit"
+                  }
+                >
+                  <Button>Edit</Button>
+                </Link>
+              ) : (
+                ""
+              )}
+            </Col>
+          </Row>
+        </Card.Title>
+      </Card.Header>
       <Card.Body>
         <Editor
           toolbarHidden
@@ -34,18 +68,6 @@ export default function Post(props) {
           onContentStateChange={setContentState}
           readOnly={true}
         />
-        <Card.Text>
-          <i>
-            Made By: <UserLink user={props.data.user} />
-          </i>
-        </Card.Text>
-        {authState != null && userState.username == props.data.user ? (
-          <Link to={"/topic/"+topicId+"/thread/"+threadId+"/post/"+props.data.id+"/edit"}>
-            <Button>Edit</Button>
-          </Link>
-        ) : (
-          ""
-        )}
       </Card.Body>
     </Card>
   );

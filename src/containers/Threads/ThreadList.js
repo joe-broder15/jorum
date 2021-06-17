@@ -25,25 +25,12 @@ export default function ThreadList(props) {
   }
   // render a Post for each item
   return (
-    <Card>
-      {/* <Card.Header>Posts by {user}</Card.Header> */}
-      <Card.Header>
-        <Card.Title>Threads</Card.Title>
-      </Card.Header>
-      {console.log(data)}
-      <Card.Body>
-        {data.length == 0 ? (
-          <h4>There are no threads for this topic</h4>
-        ) : (
-          data.map((item) => (
-            <Row className="justify-content-center">
-              <Col>
-                <Thread data={item} />
-              </Col>
-            </Row>
-          ))
-        )}
-      </Card.Body>
-    </Card>
+    <ListGroup>
+      {data.length == 0 ? (
+        <h4>There are no threads for this topic</h4>
+      ) : (
+        data.map((item) => <Thread data={item} />)
+      )}
+    </ListGroup>
   );
 }

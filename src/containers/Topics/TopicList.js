@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import GetApiRequest from "../../hooks/GetApiRequest";
 import Topic from "../../components/Topics/Topic";
-import { Container, Row, Col, Spinner, Card } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Card, ListGroup } from "react-bootstrap";
 
 export default function TopicList() {
   // get posts using our GET api hook
@@ -26,19 +26,23 @@ export default function TopicList() {
         <Col>
           <Row className="justify-content-md-center">
             <Col md="8">
-              <h1>Welcome to Jorum</h1>
               <Card>
                 <Card.Header>
                   <Card.Title>Topics</Card.Title>
                 </Card.Header>
+
                 <Card.Body>
-                  {data.map((item) => (
-                    <Row className="justify-content-center">
-                      <Col>
-                        <Topic data={item} />
-                      </Col>
-                    </Row>
-                  ))}
+                  <Card.Text>
+                    <h5>
+                      Welcome to my forum! Log in or register to make threads
+                      and post in the following topics.
+                    </h5>
+                  </Card.Text>
+                  <ListGroup>
+                    {data.map((item) => (
+                      <Topic data={item} />
+                    ))}
+                  </ListGroup>
                 </Card.Body>
               </Card>
             </Col>

@@ -14,22 +14,18 @@ export default function AppNavbar() {
 
   return (
     <Navbar bg="dark" variant="dark" expand="md" style={{ padding: "5px" }}>
-      <Navbar.Brand href="/">Web Template</Navbar.Brand>
+      <Navbar.Brand href="/">Forum</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse
         id="responsive-navbar-nav"
         className="justify-content-between"
       >
-        <Nav className="mr-auto">
-          <Nav.Link>
-            <Link to="/">Home</Link>
-          </Nav.Link>
-        </Nav>
+        <Nav className="mr-auto"></Nav>
         <Nav>
           {/* login controls */}
           {authState && userState != null ? (
             <NavDropdown
-              title={userState.username}
+              title={"my profile"}
               id="collasible-nav-dropdown"
             >
               <NavDropdown.Item>
@@ -39,9 +35,6 @@ export default function AppNavbar() {
               {/* admin controls */}
               {userState.privilege > 1 ? (
                 <Fragment>
-                  <NavDropdown.Item>
-                    <Link to="/admin/posts">Posts</Link>
-                  </NavDropdown.Item>
                   <NavDropdown.Item>
                     <Link to="/admin/users">Users</Link>
                   </NavDropdown.Item>
